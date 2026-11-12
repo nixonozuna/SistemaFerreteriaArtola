@@ -24,13 +24,16 @@
 <nav class="navbar navbar-dark navbar-custom px-4 py-3 shadow-sm">
     <div class="container-fluid">
         <span class="navbar-brand mb-0 h1 fw-bold">👥 Ferretería Artola - Módulo de Usuarios</span>
-        <a href="/roles" class="btn btn-outline-light btn-sm px-3 fw-semibold">🛡️ Ir a Roles</a>
+        <div class="d-flex gap-2">
+            <a href="/roles" class="btn btn-outline-light btn-sm px-3 fw-semibold">🛡️ Ir a Roles</a>
+            <a href="/home" class="btn btn-outline-light btn-sm px-3 fw-semibold">🏠 Panel Principal</a>
+        </div>
     </div>
 </nav>
 
 <div class="container py-4">
 
-    <!-- Barra de Acciones Principales (Nuevo y Modificar) -->
+    <!-- Barra de Acciones Principales -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h4 class="fw-bold text-dark m-0">Catálogo de Usuarios</h4>
         <div class="d-flex gap-2">
@@ -50,7 +53,7 @@
             <button type="button" class="btn btn-outline-secondary btn-sm" onclick="limpiarYBloquearFormulario()">Cancelar / Bloquear</button>
         </div>
 
-        <form th:action="@{/usuarios/guardar}" th:object="${usuario}" method="post" class="row g-3" id="userForm">
+        <form th:action="@{/usuarios/guardar}" th:object="${usuario}" method="post" class="row g-3" id="userForm" onsubmit="prepararEnvio()">
             <input type="hidden" th:field="*{IdUsuario}" id="IdUsuario">
 
             <div class="col-md-4">
@@ -78,8 +81,8 @@
             </div>
 
             <div class="col-md-4">
-                <label class="form-label">Teléfono (0000 - 0000)</label>
-                <input type="text" th:field="*{Telefono}" id="Telefono" maxlength="11" class="form-control" required disabled placeholder="8888 - 8888">
+                <label class="form-label">Teléfono (0000-0000)</label>
+                <input type="text" th:field="*{Telefono}" id="Telefono" maxlength="9" class="form-control" required disabled placeholder="8888-8888">
             </div>
 
             <div class="col-md-4">
@@ -113,7 +116,16 @@
                 </div>
             </div>
 
-            <div class="col-md-4 d-flex align-items-end">
+            <!-- Selector visible de Estado -->
+            <div class="col-md-4">
+                <label class="form-label">Estado</label>
+                <select th:field="*{Estado}" id="Estado" class="form-select" required disabled>
+                    <option value="true">Activo</option>
+                    <option value="false">Inactivo</option>
+                </select>
+            </div>
+
+            <div class="col-md-8 d-flex align-items-end">
                 <button type="submit" id="btnGuardar" class="btn btn-success w-100 fw-semibold shadow-sm" disabled>💾 Guardar / Actualizar</button>
             </div>
         </form>
@@ -139,12 +151,13 @@
                     <th>Cédula</th>
                     <th>Teléfono</th>
                     <th>Rol</th>
+                    <th>Estado</th>
                     <th>Seleccionar</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:if="${#lists.isEmpty(usuarios)}">
-                    <td colspan="7" class="text-center py-4 text-muted">No hay usuarios registrados en la base de datos.</td>
+                    <td colspan="8" class="text-center py-4 text-muted">No hay usuarios registrados en la base de datos.</td>
                 </tr>
                 <tr th:each="u : ${usuarios}">
                     <td class="fw-semibold text-primary val-id" th:text="${u.IdUsuario}"></td>
@@ -154,6 +167,9 @@
                     <td class="val-tel" th:text="${u.Telefono}"></td>
                     <td>
                         <span class="badge bg-secondary" th:text="${u.rol != null ? u.rol.Descripcion : 'Sin Rol'}"></span>
+                    </td>
+                    <td>
+                        <span class="badge" th:classappend="${u.Estado} ? 'bg-success' : 'bg-danger'" th:text="${u.Estado} ? 'Activo' : 'Inactivo'"></span>
                     </td>
                     <td>
                         <button type="button" class="btn btn-outline-primary btn-sm px-3" th:onclick="'cargarParaEditar(' + ${u.IdUsuario} + ')'">Seleccionar</button>
@@ -166,7 +182,6 @@
 </div>
 
 <script>
-    // Obtener nombres de usuario existentes
     function obtenerUsuariosExistentes() {
         const usernames = [];
         document.querySelectorAll('.username-val').forEach(el => {
@@ -175,7 +190,6 @@
         return usernames;
     }
 
-    // Autogenerar Nombre de Usuario
     document.getElementById('Nombres').addEventListener('input', generarUsername);
     document.getElementById('Apellidos').addEventListener('input', generarUsername);
 
@@ -207,40 +221,39 @@
         document.getElementById('NombreUsuario').value = finalUsername;
     }
 
-    // Máscara para Teléfono: 0000 - 0000
+    // Máscara Teléfono exacta para NCHAR(9): 0000-0000
     document.getElementById('Telefono').addEventListener('input', function (e) {
         let val = e.target.value.replace(/\D/g, '');
         if (val.length > 8) val = val.slice(0, 8);
         if (val.length > 4) {
-            e.target.value = val.slice(0, 4) + ' - ' + val.slice(4);
+            e.target.value = val.slice(0, 4) + '-' + val.slice(4);
         } else {
             e.target.value = val;
         }
     });
 
-    // Máscara para Cédula: 000-000000-0000L
+    // Máscara Cédula: 000-000000-0000L
     document.getElementById('Cedula').addEventListener('input', function (e) {
-        let val = e.target.value.toUpperCase().replace(/[^0-9A-Z]/g, '');
+        let val = e.target.value.toUpperCase();
+        let nums = val.replace(/[^0-9]/g, '').slice(0, 13);
+        let letra = val.replace(/[^A-Z]/g, '').slice(0, 1);
+        let clean = nums + letra;
         let formatted = '';
-        if (val.length > 3) {
-            formatted += val.slice(0, 3) + '-';
-            if (val.length > 9) {
-                formatted += val.slice(3, 9) + '-';
-                if (val.length > 13) {
-                    formatted += val.slice(9, 13) + val.slice(13, 14);
-                } else {
-                    formatted += val.slice(9, 13);
-                }
-            } else {
-                formatted += val.slice(3, 9);
-            }
-        } else {
-            formatted = val;
+
+        if (clean.length > 0) {
+            let p1 = clean.slice(0, 3);
+            let p2 = clean.slice(3, 9);
+            let p3 = clean.slice(9, 13);
+            let p4 = clean.slice(13, 14);
+
+            formatted = p1;
+            if (p2.length > 0) formatted += '-' + p2;
+            if (p3.length > 0) formatted += '-' + p3;
+            if (p4.length > 0) formatted += p4;
         }
         e.target.value = formatted;
     });
 
-    // Mostrar / Ocultar Contraseña
     function togglePassword() {
         const inputPass = document.getElementById('ContraseñaUsuario');
         const btnPass = document.getElementById('btnTogglePassword');
@@ -253,21 +266,26 @@
         }
     }
 
-    // Habilitar modo Nuevo Registro
     function habilitarModoNuevo() {
+        // Limpiar formulario y asegurar que el ID esté vacío para que sea un registro NUEVO
+        document.getElementById('userForm').reset();
+        document.getElementById('IdUsuario').value = '';
+        document.getElementById('NombreUsuario').value = '';
+
         const inputs = document.querySelectorAll('#userForm input, #userForm select');
         inputs.forEach(input => {
             if (input.id !== 'NombreUsuario') {
                 input.disabled = false;
             }
         });
+
+        // Fijar Estado por defecto en Activo (true) para nuevos registros
+        document.getElementById('Estado').value = 'true';
+
         document.getElementById('btnGuardar').disabled = false;
         document.getElementById('tituloFormulario').textContent = 'Registrar Nuevo Usuario';
-        document.getElementById('IdUsuario').value = '';
-        document.getElementById('userForm').reset();
     }
 
-    // Habilitar modo Modificar (si seleccionan un usuario de la tabla)
     function habilitarModoModificar() {
         const idVal = document.getElementById('IdUsuario').value;
         if (!idVal) {
@@ -276,7 +294,7 @@
         }
         const inputs = document.querySelectorAll('#userForm input, #userForm select');
         inputs.forEach(input => {
-            if (input.id !== 'NombreUsuario') { // El username no se altera
+            if (input.id !== 'NombreUsuario') {
                 input.disabled = false;
             }
         });
@@ -292,27 +310,22 @@
         document.getElementById('userForm').reset();
     }
 
-    // Cargar datos al hacer clic en Seleccionar en la tabla
     function cargarParaEditar(id) {
         window.location.href = '/usuarios/editar/' + id;
     }
 
-    // Buscador en tiempo real de la tabla
+    function prepararEnvio() {
+        document.getElementById('NombreUsuario').readOnly = false;
+    }
+
     function filtrarTabla() {
         const filtro = document.getElementById('inputBuscar').value.toLowerCase();
         const filas = document.querySelectorAll('#tablaUsuarios tbody tr');
-
         filas.forEach(fila => {
-            const textoFila = fila.textContent.toLowerCase();
-            if (textoFila.includes(filtro)) {
-                fila.style.display = '';
-            } else {
-                fila.style.display = 'none';
-            }
+            fila.style.display = fila.textContent.toLowerCase().includes(filtro) ? '' : 'none';
         });
     }
 
-    // Si la página carga tras una petición de edición, mantiene el ID cargado
     window.onload = function() {
         const idVal = document.getElementById('IdUsuario').value;
         if (idVal) {

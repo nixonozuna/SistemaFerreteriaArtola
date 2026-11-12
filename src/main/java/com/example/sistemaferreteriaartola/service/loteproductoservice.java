@@ -26,7 +26,6 @@ public class loteproductoservice {
         if (lote.getEstado() == null) {
             lote.setEstado(true);
         }
-        // Sincronizar stock actual con la cantidad inicial al crear nuevo lote si está vacío
         if (lote.getIdLoteProducto() == null && lote.getStockActual() == null) {
             lote.setStockActual(lote.getCantidadInicial());
         }

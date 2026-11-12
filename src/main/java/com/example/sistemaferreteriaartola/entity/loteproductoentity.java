@@ -23,6 +23,10 @@ public class loteproductoentity {
     private usuarioentity usuario;
 
     @ManyToOne
+    @JoinColumn(name = "oCompra", nullable = true) // Relación directa con la compra
+    private compraentity compra;
+
+    @ManyToOne
     @JoinColumn(name = "oProducto", nullable = false)
     private productoentity producto;
 
