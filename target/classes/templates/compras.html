@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestión de Compras - Ferretería Artola</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f4f7f6; color: #333; }
+        .navbar-custom { background: linear-gradient(135deg, #1e293b, #0f172a); }
+        .card-modern { border: none; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05); }
+        .form-label { font-weight: 500; color: #475569; font-size: 0.85rem; }
+        .form-control, .form-select { border-radius: 8px; border: 1px solid #cbd5e1; padding: 8px 12px; font-size: 0.9rem; }
+        .form-control:disabled, .form-select:disabled { background-color: #e2e8f0; opacity: 1; }
+        .table thead { background-color: #0f172a; color: white; }
+        .btn-custom-primary { background-color: #0f172a; color: #fff; border-radius: 8px; }
+        .btn-custom-primary:hover { background-color: #1e293b; color: #fff; }
+        .btn-custom-warning { background-color: #d97706; color: #fff; border-radius: 8px; }
+        .btn-custom-warning:hover { background-color: #b45309; color: #fff; }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-dark navbar-custom px-4 py-3 shadow-sm">
+    <div class="container-fluid">
+        <span class="navbar-brand mb-0 h1 fw-bold">🛒 Ferretería Artola - Módulo de Compras</span>
+        <div class="d-flex gap-2">
+            <a href="/lotes" class="btn btn-outline-light btn-sm px-3 fw-semibold">📦 Lotes</a>
+            <a href="/home" class="btn btn-outline-light btn-sm px-3 fw-semibold">🏠 Panel Principal</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container py-4">
+
+    <!-- Barra de Acciones Principales -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4 class="fw-bold text-dark m-0">Registro de Compras</h4>
+        <div class="d-flex gap-2">
+            <button type="button" class="btn btn-custom-primary px-4 fw-semibold shadow-sm" onclick="habilitarModoNuevo()">
+                ➕ Nueva Compra
+            </button>
+            <button type="button" class="btn btn-custom-warning px-4 fw-semibold shadow-sm" onclick="habilitarModoModificar()">
+                ✏️ Modificar
+            </button>
+        </div>
+    </div>
+
+    <!-- Formulario -->
+    <div class="card card-modern p-4 mb-4 bg-white">
+        <div class="pb-3 mb-3 border-bottom d-flex justify-content-between align-items-center">
+            <h5 class="fw-bold text-dark m-0" id="tituloFormulario">Formulario de Compra (Bloqueado)</h5>
+            <button type="button" class="btn btn-outline-secondary btn-sm" onclick="limpiarYBloquearFormulario()">Cancelar / Bloquear</button>
+        </div>
+
+        <form th:action="@{/compras/guardar}" th:object="${compra}" method="post" class="row g-3" id="compraForm">
+            <input type="hidden" th:field="*{IdCompra}" id="IdCompra">
+            <input type="hidden" th:field="*{Estado}" id="Estado">
+
+            <div class="col-md-3">
+                <label class="form-label">N° de Factura</label>
+                <input type="text" th:field="*{NumeroFactura}" id="NumeroFactura" maxlength="50" class="form-control" required disabled placeholder="FAC-001">
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label">Tipo de Documento</label>
+                <input type="text" th:field="*{TipoDocumento}" id="TipoDocumento" maxlength="50" class="form-control" required disabled placeholder="Factura Comercial">
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label">Forma de Pago</label>
+                <select th:field="*{FormaPago}" id="FormaPago" class="form-select" required disabled>
+                    <option value="">Seleccione...</option>
+                    <option value="Efectivo">Efectivo</option>
+                    <option value="Tarjeta">Tarjeta</option>
+                    <option value="Crédito">Crédito</option>
+                    <option value="Transferencia">Transferencia</option>
+                </select>
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label">Moneda</label>
+                <select th:field="*{Moneda}" id="Moneda" class="form-select" required disabled>
+                    <option value="true">Córdobas (C$)</option>
+                    <option value="false">Dólares ($)</option>
+                </select>
+            </div>
+
+            <div class="col-md-4">
+                <label class="form-label">Proveedor</label>
+                <select th:field="*{proveedor.IdProveedor}" id="Proveedor" class="form-select" required disabled>
+                    <option value="">Seleccione proveedor...</option>
+                    <option th:each="prov : ${proveedores}" th:value="${prov.IdProveedor}" th:text="${prov.RazonSocial}"></option>
+                </select>
+            </div>
+
+            <div class="col-md-4">
+                <label class="form-label">Usuario Responsable</label>
+                <select th:field="*{usuario.IdUsuario}" id="Usuario" class="form-select" required disabled>
+                    <option value="">Seleccione usuario...</option>
+                    <option th:each="u : ${usuarios}" th:value="${u.IdUsuario}" th:text="${u.Nombres + ' ' + u.Apellidos}"></option>
+                </select>
+            </div>
+
+            <div class="col-md-2">
+                <label class="form-label">Total Inicial ($)</label>
+                <input type="number" step="0.01" th:field="*{TotalInicial}" id="TotalInicial" min="0" class="form-control" required disabled placeholder="0.00">
+            </div>
+
+            <div class="col-md-2">
+                <label class="form-label">Desc. Global ($)</label>
+                <input type="number" step="0.01" th:field="*{DescuentoGlobal}" id="DescuentoGlobal" min="0" class="form-control" disabled placeholder="0.00">
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label">Total Final ($)</label>
+                <input type="number" step="0.01" th:field="*{TotalFinal}" id="TotalFinal" min="0" class="form-control" required disabled placeholder="0.00">
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label">Monto Pagado ($)</label>
+                <input type="number" step="0.01" th:field="*{MontoPagado}" id="MontoPagado" min="0" class="form-control" required disabled placeholder="0.00">
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label">Cambio ($)</label>
+                <input type="number" step="0.01" th:field="*{Cambio}" id="Cambio" min="0" class="form-control" required disabled placeholder="0.00">
+            </div>
+
+            <div class="col-md-3 d-flex align-items-end">
+                <button type="submit" id="btnGuardar" class="btn btn-success w-100 fw-semibold shadow-sm" disabled>💾 Guardar / Actualizar</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Tabla -->
+    <div class="card card-modern p-4 bg-white">
+        <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom flex-wrap gap-3">
+            <h5 class="fw-bold text-dark m-0">Compras Registradas</h5>
+            <div class="input-group" style="width: 300px;">
+                <span class="input-group-text bg-white">🔍</span>
+                <input type="text" id="inputBuscar" class="form-control" placeholder="Buscar compra..." onkeyup="filtrarTabla()">
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover align-middle" id="tablaCompras">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>N° Factura</th>
+                    <th>Proveedor</th>
+                    <th>Forma Pago</th>
+                    <th>Total Final</th>
+                    <th>Fecha</th>
+                    <th>Seleccionar</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${#lists.isEmpty(compras)}">
+                    <td colspan="7" class="text-center py-4 text-muted">No hay compras registradas en la base de datos.</td>
+                </tr>
+                <tr th:each="c : ${compras}">
+                    <td class="fw-semibold text-primary" th:text="${c.IdCompra}"></td>
+                    <td><span class="badge bg-dark" th:text="${c.NumeroFactura}"></span></td>
+                    <td class="fw-bold" th:text="${c.proveedor != null ? c.proveedor.RazonSocial : 'N/A'}"></td>
+                    <td th:text="${c.FormaPago}"></td>
+                    <td class="fw-bold text-success" th:text="${'$' + c.TotalFinal}"></td>
+                    <td class="text-muted" th:text="${c.FechaCompra != null ? #dates.format(c.FechaCompra, 'dd/MM/yyyy HH:mm') : 'N/A'}"></td>
+                    <td>
+                        <button type="button" class="btn btn-outline-primary btn-sm px-3" th:onclick="'window.location.href=\'/compras/editar/' + ${c.IdCompra} + '\''">Seleccionar</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    function habilitarModoNuevo() {
+        document.querySelectorAll('#compraForm input, #compraForm select').forEach(el => {
+            if (el.type !== 'hidden') el.disabled = false;
+        });
+        document.getElementById('btnGuardar').disabled = false;
+        document.getElementById('tituloFormulario').textContent = 'Registrar Nueva Compra';
+        document.getElementById('IdCompra').value = '';
+        document.getElementById('Estado').value = 'true';
+        document.getElementById('compraForm').reset();
+    }
+
+    function habilitarModoModificar() {
+        if (!document.getElementById('IdCompra').value) {
+            alert('Por favor, seleccione una compra de la tabla haciendo clic en "Seleccionar" para poder modificarla.');
+            return;
+        }
+        document.querySelectorAll('#compraForm input, #compraForm select').forEach(el => {
+            if (el.type !== 'hidden') el.disabled = false;
+        });
+        document.getElementById('btnGuardar').disabled = false;
+        document.getElementById('tituloFormulario').textContent = 'Modificar Compra Seleccionada';
+    }
+
+    function limpiarYBloquearFormulario() {
+        document.querySelectorAll('#compraForm input, #compraForm select').forEach(el => {
+            if (el.type !== 'hidden') el.disabled = true;
+        });
+        document.getElementById('btnGuardar').disabled = true;
+        document.getElementById('tituloFormulario').textContent = 'Formulario de Compra (Bloqueado)';
+        document.getElementById('compraForm').reset();
+    }
+
+    function filtrarTabla() {
+        const filtro = document.getElementById('inputBuscar').value.toLowerCase();
+        document.querySelectorAll('#tablaCompras tbody tr').forEach(fila => {
+            fila.style.display = fila.textContent.toLowerCase().includes(filtro) ? '' : 'none';
+        });
+    }
+
+    window.onload = function() {
+        if (document.getElementById('IdCompra').value) {
+            document.getElementById('tituloFormulario').textContent = 'Compra Seleccionada (Presione "Modificar" arriba para editar)';
+        }
+    };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
