@@ -24,16 +24,24 @@
 <nav class="navbar navbar-dark navbar-custom px-4 py-3 shadow-sm">
     <div class="container-fluid">
         <span class="navbar-brand mb-0 h1 fw-bold">👥 Ferretería Artola - Módulo de Usuarios</span>
+<<<<<<< HEAD
         <div class="d-flex gap-2">
             <a href="/roles" class="btn btn-outline-light btn-sm px-3 fw-semibold">🛡️ Ir a Roles</a>
             <a href="/home" class="btn btn-outline-light btn-sm px-3 fw-semibold">🏠 Panel Principal</a>
         </div>
+=======
+        <a href="/roles" class="btn btn-outline-light btn-sm px-3 fw-semibold">🛡️ Ir a Roles</a>
+>>>>>>> 1a3d8a1b7868ed12a0fe010030e2c806fb6f1c87
     </div>
 </nav>
 
 <div class="container py-4">
 
+<<<<<<< HEAD
     <!-- Barra de Acciones Principales -->
+=======
+    <!-- Barra de Acciones Principales (Nuevo y Modificar) -->
+>>>>>>> 1a3d8a1b7868ed12a0fe010030e2c806fb6f1c87
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h4 class="fw-bold text-dark m-0">Catálogo de Usuarios</h4>
         <div class="d-flex gap-2">
@@ -53,7 +61,11 @@
             <button type="button" class="btn btn-outline-secondary btn-sm" onclick="limpiarYBloquearFormulario()">Cancelar / Bloquear</button>
         </div>
 
+<<<<<<< HEAD
         <form th:action="@{/usuarios/guardar}" th:object="${usuario}" method="post" class="row g-3" id="userForm" onsubmit="prepararEnvio()">
+=======
+        <form th:action="@{/usuarios/guardar}" th:object="${usuario}" method="post" class="row g-3" id="userForm">
+>>>>>>> 1a3d8a1b7868ed12a0fe010030e2c806fb6f1c87
             <input type="hidden" th:field="*{IdUsuario}" id="IdUsuario">
 
             <div class="col-md-4">
@@ -81,8 +93,13 @@
             </div>
 
             <div class="col-md-4">
+<<<<<<< HEAD
                 <label class="form-label">Teléfono (0000-0000)</label>
                 <input type="text" th:field="*{Telefono}" id="Telefono" maxlength="9" class="form-control" required disabled placeholder="8888-8888">
+=======
+                <label class="form-label">Teléfono (0000 - 0000)</label>
+                <input type="text" th:field="*{Telefono}" id="Telefono" maxlength="11" class="form-control" required disabled placeholder="8888 - 8888">
+>>>>>>> 1a3d8a1b7868ed12a0fe010030e2c806fb6f1c87
             </div>
 
             <div class="col-md-4">
@@ -116,6 +133,7 @@
                 </div>
             </div>
 
+<<<<<<< HEAD
             <!-- Selector visible de Estado -->
             <div class="col-md-4">
                 <label class="form-label">Estado</label>
@@ -126,6 +144,9 @@
             </div>
 
             <div class="col-md-8 d-flex align-items-end">
+=======
+            <div class="col-md-4 d-flex align-items-end">
+>>>>>>> 1a3d8a1b7868ed12a0fe010030e2c806fb6f1c87
                 <button type="submit" id="btnGuardar" class="btn btn-success w-100 fw-semibold shadow-sm" disabled>💾 Guardar / Actualizar</button>
             </div>
         </form>
@@ -151,13 +172,20 @@
                     <th>Cédula</th>
                     <th>Teléfono</th>
                     <th>Rol</th>
+<<<<<<< HEAD
                     <th>Estado</th>
+=======
+>>>>>>> 1a3d8a1b7868ed12a0fe010030e2c806fb6f1c87
                     <th>Seleccionar</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:if="${#lists.isEmpty(usuarios)}">
+<<<<<<< HEAD
                     <td colspan="8" class="text-center py-4 text-muted">No hay usuarios registrados en la base de datos.</td>
+=======
+                    <td colspan="7" class="text-center py-4 text-muted">No hay usuarios registrados en la base de datos.</td>
+>>>>>>> 1a3d8a1b7868ed12a0fe010030e2c806fb6f1c87
                 </tr>
                 <tr th:each="u : ${usuarios}">
                     <td class="fw-semibold text-primary val-id" th:text="${u.IdUsuario}"></td>
@@ -169,9 +197,12 @@
                         <span class="badge bg-secondary" th:text="${u.rol != null ? u.rol.Descripcion : 'Sin Rol'}"></span>
                     </td>
                     <td>
+<<<<<<< HEAD
                         <span class="badge" th:classappend="${u.Estado} ? 'bg-success' : 'bg-danger'" th:text="${u.Estado} ? 'Activo' : 'Inactivo'"></span>
                     </td>
                     <td>
+=======
+>>>>>>> 1a3d8a1b7868ed12a0fe010030e2c806fb6f1c87
                         <button type="button" class="btn btn-outline-primary btn-sm px-3" th:onclick="'cargarParaEditar(' + ${u.IdUsuario} + ')'">Seleccionar</button>
                     </td>
                 </tr>
@@ -182,6 +213,10 @@
 </div>
 
 <script>
+<<<<<<< HEAD
+=======
+    // Obtener nombres de usuario existentes
+>>>>>>> 1a3d8a1b7868ed12a0fe010030e2c806fb6f1c87
     function obtenerUsuariosExistentes() {
         const usernames = [];
         document.querySelectorAll('.username-val').forEach(el => {
@@ -190,6 +225,10 @@
         return usernames;
     }
 
+<<<<<<< HEAD
+=======
+    // Autogenerar Nombre de Usuario
+>>>>>>> 1a3d8a1b7868ed12a0fe010030e2c806fb6f1c87
     document.getElementById('Nombres').addEventListener('input', generarUsername);
     document.getElementById('Apellidos').addEventListener('input', generarUsername);
 
@@ -221,17 +260,26 @@
         document.getElementById('NombreUsuario').value = finalUsername;
     }
 
+<<<<<<< HEAD
     // Máscara Teléfono exacta para NCHAR(9): 0000-0000
+=======
+    // Máscara para Teléfono: 0000 - 0000
+>>>>>>> 1a3d8a1b7868ed12a0fe010030e2c806fb6f1c87
     document.getElementById('Telefono').addEventListener('input', function (e) {
         let val = e.target.value.replace(/\D/g, '');
         if (val.length > 8) val = val.slice(0, 8);
         if (val.length > 4) {
+<<<<<<< HEAD
             e.target.value = val.slice(0, 4) + '-' + val.slice(4);
+=======
+            e.target.value = val.slice(0, 4) + ' - ' + val.slice(4);
+>>>>>>> 1a3d8a1b7868ed12a0fe010030e2c806fb6f1c87
         } else {
             e.target.value = val;
         }
     });
 
+<<<<<<< HEAD
     // Máscara Cédula: 000-000000-0000L
     document.getElementById('Cedula').addEventListener('input', function (e) {
         let val = e.target.value.toUpperCase();
@@ -250,10 +298,34 @@
             if (p2.length > 0) formatted += '-' + p2;
             if (p3.length > 0) formatted += '-' + p3;
             if (p4.length > 0) formatted += p4;
+=======
+    // Máscara para Cédula: 000-000000-0000L
+    document.getElementById('Cedula').addEventListener('input', function (e) {
+        let val = e.target.value.toUpperCase().replace(/[^0-9A-Z]/g, '');
+        let formatted = '';
+        if (val.length > 3) {
+            formatted += val.slice(0, 3) + '-';
+            if (val.length > 9) {
+                formatted += val.slice(3, 9) + '-';
+                if (val.length > 13) {
+                    formatted += val.slice(9, 13) + val.slice(13, 14);
+                } else {
+                    formatted += val.slice(9, 13);
+                }
+            } else {
+                formatted += val.slice(3, 9);
+            }
+        } else {
+            formatted = val;
+>>>>>>> 1a3d8a1b7868ed12a0fe010030e2c806fb6f1c87
         }
         e.target.value = formatted;
     });
 
+<<<<<<< HEAD
+=======
+    // Mostrar / Ocultar Contraseña
+>>>>>>> 1a3d8a1b7868ed12a0fe010030e2c806fb6f1c87
     function togglePassword() {
         const inputPass = document.getElementById('ContraseñaUsuario');
         const btnPass = document.getElementById('btnTogglePassword');
@@ -266,18 +338,24 @@
         }
     }
 
+<<<<<<< HEAD
     function habilitarModoNuevo() {
         // Limpiar formulario y asegurar que el ID esté vacío para que sea un registro NUEVO
         document.getElementById('userForm').reset();
         document.getElementById('IdUsuario').value = '';
         document.getElementById('NombreUsuario').value = '';
 
+=======
+    // Habilitar modo Nuevo Registro
+    function habilitarModoNuevo() {
+>>>>>>> 1a3d8a1b7868ed12a0fe010030e2c806fb6f1c87
         const inputs = document.querySelectorAll('#userForm input, #userForm select');
         inputs.forEach(input => {
             if (input.id !== 'NombreUsuario') {
                 input.disabled = false;
             }
         });
+<<<<<<< HEAD
 
         // Fijar Estado por defecto en Activo (true) para nuevos registros
         document.getElementById('Estado').value = 'true';
@@ -286,6 +364,15 @@
         document.getElementById('tituloFormulario').textContent = 'Registrar Nuevo Usuario';
     }
 
+=======
+        document.getElementById('btnGuardar').disabled = false;
+        document.getElementById('tituloFormulario').textContent = 'Registrar Nuevo Usuario';
+        document.getElementById('IdUsuario').value = '';
+        document.getElementById('userForm').reset();
+    }
+
+    // Habilitar modo Modificar (si seleccionan un usuario de la tabla)
+>>>>>>> 1a3d8a1b7868ed12a0fe010030e2c806fb6f1c87
     function habilitarModoModificar() {
         const idVal = document.getElementById('IdUsuario').value;
         if (!idVal) {
@@ -294,7 +381,11 @@
         }
         const inputs = document.querySelectorAll('#userForm input, #userForm select');
         inputs.forEach(input => {
+<<<<<<< HEAD
             if (input.id !== 'NombreUsuario') {
+=======
+            if (input.id !== 'NombreUsuario') { // El username no se altera
+>>>>>>> 1a3d8a1b7868ed12a0fe010030e2c806fb6f1c87
                 input.disabled = false;
             }
         });
@@ -310,10 +401,15 @@
         document.getElementById('userForm').reset();
     }
 
+<<<<<<< HEAD
+=======
+    // Cargar datos al hacer clic en Seleccionar en la tabla
+>>>>>>> 1a3d8a1b7868ed12a0fe010030e2c806fb6f1c87
     function cargarParaEditar(id) {
         window.location.href = '/usuarios/editar/' + id;
     }
 
+<<<<<<< HEAD
     function prepararEnvio() {
         document.getElementById('NombreUsuario').readOnly = false;
     }
@@ -326,6 +422,24 @@
         });
     }
 
+=======
+    // Buscador en tiempo real de la tabla
+    function filtrarTabla() {
+        const filtro = document.getElementById('inputBuscar').value.toLowerCase();
+        const filas = document.querySelectorAll('#tablaUsuarios tbody tr');
+
+        filas.forEach(fila => {
+            const textoFila = fila.textContent.toLowerCase();
+            if (textoFila.includes(filtro)) {
+                fila.style.display = '';
+            } else {
+                fila.style.display = 'none';
+            }
+        });
+    }
+
+    // Si la página carga tras una petición de edición, mantiene el ID cargado
+>>>>>>> 1a3d8a1b7868ed12a0fe010030e2c806fb6f1c87
     window.onload = function() {
         const idVal = document.getElementById('IdUsuario').value;
         if (idVal) {
