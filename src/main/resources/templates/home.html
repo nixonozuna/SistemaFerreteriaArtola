@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel Principal - Ferretería Artola</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f1f5f9;
+            color: #334155;
+        }
+        .navbar-custom {
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+        }
+        .dashboard-card {
+            border: none;
+            border-radius: 16px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+            background: #ffffff;
+        }
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        .welcome-banner {
+            background: linear-gradient(135deg, #0f172a, #334155);
+            color: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navbar Superior -->
+<nav class="navbar navbar-dark navbar-custom px-4 py-3 shadow-sm">
+    <div class="container-fluid">
+        <span class="navbar-brand mb-0 h1 fw-bold">🛠️ Ferretería Artola - Sistema de Gestión</span>
+        <a href="/" class="btn btn-outline-light btn-sm px-3 fw-semibold">🚪 Cerrar Sesión</a>
+    </div>
+</nav>
+
+<div class="container py-5">
+
+    <!-- Banner de Bienvenida -->
+    <div class="welcome-banner mb-5 d-flex justify-content-between align-items-center flex-wrap gap-3">
+        <div>
+            <h2 class="fw-bold mb-1">¡Bienvenido al Panel de Control!</h2>
+            <p class="text-light opacity-75 m-0">Seleccione un módulo para gestionar los registros de la ferretería.</p>
+        </div>
+        <div>
+            <span class="badge bg-primary px-3 py-2 fs-6">Sesión Activa</span>
+        </div>
+    </div>
+
+    <!-- Cuadrícula de Módulos (Todas las tarjetas van adentro de este row) -->
+    <div class="row g-4">
+
+        <!-- Módulo de Usuarios -->
+        <div class="col-md-4">
+            <div class="dashboard-card p-4 h-100 d-flex flex-column justify-content-between text-center">
+                <div>
+                    <div class="card-icon">👥</div>
+                    <h4 class="fw-bold text-dark">Usuarios</h4>
+                    <p class="text-muted small">Gestión de cuentas de usuarios, datos personales, teléfonos y cédulas con preservación histórica.</p>
+                </div>
+                <a href="/usuarios" class="btn btn-dark w-100 fw-semibold mt-3 py-2">Acceder al Módulo</a>
+            </div>
+        </div>
+
+        <!-- Módulo de Roles -->
+        <div class="col-md-4">
+            <div class="dashboard-card p-4 h-100 d-flex flex-column justify-content-between text-center">
+                <div>
+                    <div class="card-icon">🛡️</div>
+                    <h4 class="fw-bold text-dark">Roles del Sistema</h4>
+                    <p class="text-muted small">Visualización de perfiles y permisos asignados para cada nivel de acceso en la ferretería.</p>
+                </div>
+                <a href="/roles" class="btn btn-dark w-100 fw-semibold mt-3 py-2">Acceder al Módulo</a>
+            </div>
+        </div>
+
+        <!-- Módulo de Categorías de Producto -->
+        <div class="col-md-4">
+            <div class="dashboard-card p-4 h-100 d-flex flex-column justify-content-between text-center">
+                <div>
+                    <div class="card-icon">📦</div>
+                    <h4 class="fw-bold text-dark">Categorías</h4>
+                    <p class="text-muted small">Clasificación de productos por departamentos, herramientas y materiales de ferretería.</p>
+                </div>
+                <a href="/categorias" class="btn btn-dark w-100 fw-semibold mt-3 py-2">Acceder al Módulo</a>
+            </div>
+        </div>
+
+        <!-- Módulo de Unidades de Medida -->
+        <div class="col-md-4">
+            <div class="dashboard-card p-4 h-100 d-flex flex-column justify-content-between text-center">
+                <div>
+                    <div class="card-icon">📏</div>
+                    <h4 class="fw-bold text-dark">Unidades de Medida</h4>
+                    <p class="text-muted small">Administración de unidades métricas (libras, metros, unidades, galones) para el inventario.</p>
+                </div>
+                <a href="/unidades" class="btn btn-dark w-100 fw-semibold mt-3 py-2">Acceder al Módulo</a>
+            </div>
+        </div>
+
+        <!-- Módulo de Proveedores -->
+        <div class="col-md-4">
+            <div class="dashboard-card p-4 h-100 d-flex flex-column justify-content-between text-center">
+                <div>
+                    <div class="card-icon">🏭</div>
+                    <h4 class="fw-bold text-dark">Proveedores</h4>
+                    <p class="text-muted small">Gestión de proveedores, contactos comerciales y distribución de mercadería.</p>
+                </div>
+                <a href="/proveedores" class="btn btn-dark w-100 fw-semibold mt-3 py-2">Acceder al Módulo</a>
+            </div>
+        </div>
+
+        <!-- Módulo de Productos -->
+        <div class="col-md-4">
+            <div class="dashboard-card p-4 h-100 d-flex flex-column justify-content-between text-center">
+                <div>
+                    <div class="card-icon">🛠️</div>
+                    <h4 class="fw-bold text-dark">Productos / Inventario</h4>
+                    <p class="text-muted small">Control general de códigos de barra, categorías, unidades y existencias.</p>
+                </div>
+                <a href="/productos" class="btn btn-dark w-100 fw-semibold mt-3 py-2">Acceder al Módulo</a>
+            </div>
+        </div>
+
+        <!-- Módulo de Lotes de Producto -->
+        <div class="col-md-4">
+            <div class="dashboard-card p-4 h-100 d-flex flex-column justify-content-between text-center">
+                <div>
+                    <div class="card-icon">📦</div>
+                    <h4 class="fw-bold text-dark">Lotes de Producto</h4>
+                    <p class="text-muted small">Control de códigos de lote, stock actual, fechas de vencimiento y precios.</p>
+                </div>
+                <a href="/lotes" class="btn btn-dark w-100 fw-semibold mt-3 py-2">Acceder al Módulo</a>
+            </div>
+        </div>
+
+        <!-- Módulo de Compras -->
+        <div class="col-md-4">
+            <div class="dashboard-card p-4 h-100 d-flex flex-column justify-content-between text-center">
+                <div>
+                    <div class="card-icon">🛒</div>
+                    <h4 class="fw-bold text-dark">Registro de Compras</h4>
+                    <p class="text-muted small">Gestión de facturas de compra, formas de pago, montos y proveedores.</p>
+                </div>
+                <a href="/compras" class="btn btn-dark w-100 fw-semibold mt-3 py-2">Acceder al Módulo</a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
